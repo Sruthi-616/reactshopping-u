@@ -1,0 +1,52 @@
+<div class="container">
+  <div class="row">
+    <!-- Total Orders Card -->
+    <div class="col-md-3 mt-5">
+      <div class="card">
+        <div class="card-header bg-primary text-white">Total Orders</div>
+        <div class="card-body">
+          <h5 class="card-title">{{ totalOrders }}</h5>
+          <p class="card-text">My orders placed.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Total Cart Items Card -->
+    <div class="col-md-3 mt-5">
+      <div class="card">
+        <div class="card-header bg-info text-white">Cart Items</div>
+        <div class="card-body">
+          <h5 class="card-title">{{ totalCartItems }}</h5>
+          <p class="card-text">Items in my cart.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pie Charts Row -->
+  <div class="row mt-4">
+    <!-- Orders Pie Chart -->
+    <div class="col-md-6 d-flex justify-content-center">
+      <div class="card" style="width: 100%; max-width: 400px;">
+        <div class="card-header text-center">
+          <h6>My Orders Overview</h6>
+        </div>
+        <div class="card-body">
+          <canvas id="userOrderChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cart Pie Chart -->
+    <div class="col-md-6 d-flex justify-content-center">
+      <div class="card" style="width: 100%; max-width: 400px;">
+        <div class="card-header text-center">
+          <h6>My Cart Overview</h6>
+        </div>
+        <div class="card-body">
+          <canvas id="userCartChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

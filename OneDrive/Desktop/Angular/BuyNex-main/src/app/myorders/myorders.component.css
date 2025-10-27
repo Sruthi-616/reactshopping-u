@@ -1,0 +1,35 @@
+
+h4{
+    margin-top: -400px;
+}
+.card {
+    transition: transform 0.2s ease-in-out;
+    border-radius: 12px;
+    margin-left: 200px;
+    width:400px;
+    height: 150px;
+    margin-top: 300px;
+    text-align: center;
+  }
+  
+  .card:hover {
+    transform: scale(1.03);
+  }
+  
+  .card-footer button {
+    border-radius: 25px;
+    font-size: 0.9rem;
+  }
+  h4{ 
+    margin-left: 650px;
+    margin-top: -300px;
+
+  }
+  .row{
+      margin-left: -280px;
+
+  }
+  body{
+      overflow-y: hidden;
+  }
+  

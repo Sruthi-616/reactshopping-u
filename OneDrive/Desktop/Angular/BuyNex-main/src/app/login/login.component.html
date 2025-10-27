@@ -1,0 +1,182 @@
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card shadow-sm p-4 bg-light" style="width:100%; max-width:400px;">
+
+    <!-- Header -->
+    <h4 class="text-center mb-4">
+      {{ showRegister ? '📝 Register New Account' : showForgot ? '🔑 Reset Your Password' : '🔐 Login to Your Account' }}
+    </h4>
+
+    <!-- ✅ LOGIN FORM -->
+    <form *ngIf="!showRegister && !showForgot" [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="mb-3">
+        <label for="username" class="form-label">Username<span class="text-danger">*</span></label>
+        <input id="username" type="text" formControlName="username" class="form-control"
+          [class.is-invalid]="username?.invalid && (username?.touched || username?.dirty)"
+          placeholder="Enter Username"/>
+        <div class="invalid-feedback" *ngIf="username?.errors?.['required']">Username is required</div>
+      </div>
+
+      <div class="mb-3 position-relative">
+        <label class="form-label">Password<span class="text-danger">*</span></label>
+        <input [type]="showPassword ? 'text' : 'password'" formControlName="password" class="form-control" placeholder="Enter Password"
+          [class.is-invalid]="loginForm.get('password')?.invalid && (loginForm.get('password')?.touched || loginForm.get('password')?.dirty)">
+           <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'" 
+           (click)="togglePassword()" 
+           style="position:absolute; right:12px; top:38px; cursor:pointer;"></i>
+
+        <div class="invalid-feedback" *ngIf="password?.errors?.['required']">Password is required</div>
+        <div class="invalid-feedback" *ngIf="password?.errors?.['minlength']">Minimum 8 characters</div>
+      </div>
+
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary btn-block mb-3 log" [disabled]="!loginForm.valid">
+          <i class="fas fa-sign-in-alt me-2"></i> Login
+        </button>
+
+        <div class="d-flex justify-content-between">
+          <a href="#" class="text-decoration-none small" (click)="toggleForgot()">Forgot Password?</a>
+          <a href="#" class="text-decoration-none small" (click)="toggleRegister()">Register</a>
+        </div>
+      </div>
+    </form>
+
+    <!-- ✅ REGISTER FORM -->
+    <form *ngIf="showRegister" [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" novalidate>
+      <!-- Username -->
+      <div class="mb-3">
+        <label class="form-label">Username<span class="text-danger">*</span></label>
+        <input type="text" formControlName="username" class="form-control" placeholder="Choose username"
+          [class.is-invalid]="registerForm.get('username')?.invalid && (registerForm.get('username')?.touched || registerForm.get('username')?.dirty)">
+        <div class="invalid-feedback" *ngIf="registerForm.get('username')?.errors?.['required']">
+          Username is required
+        </div>
+      </div>
+    
+      <!-- Password -->
+      <div class="mb-3 position-relative">
+        <label class="form-label">Password<span class="text-danger">*</span></label>
+        <input [type]="showPassword ? 'text' : 'password'" formControlName="password" class="form-control" placeholder="Create password"
+          [class.is-invalid]="registerForm.get('password')?.invalid && (registerForm.get('password')?.touched || registerForm.get('password')?.dirty)">
+        <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'" 
+           (click)="togglePassword()" 
+           style="position:absolute; right:12px; top:38px; cursor:pointer;"></i>
+        <div class="invalid-feedback" *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</div>
+        <div class="invalid-feedback" *ngIf="registerForm.get('password')?.errors?.['minlength']">Minimum 8 characters</div>
+      </div>
+    
+      <!-- Confirm Password -->
+      <div class="mb-3 position-relative">
+        <label class="form-label">Confirm Password<span class="text-danger">*</span></label>
+        <input [type]="showPassword ? 'text' : 'password'" formControlName="confirmPassword" class="form-control" placeholder="Confirm password"
+          [class.is-invalid]="
+            (registerForm.get('confirmPassword')?.invalid && (registerForm.get('confirmPassword')?.touched || registerForm.get('confirmPassword')?.dirty))
+            || (registerForm.errors?.['passwordMismatch'] && (registerForm.get('confirmPassword')?.touched || registerForm.get('confirmPassword')?.dirty))
+          ">
+        
+        <!-- Required error -->
+        <div class="invalid-feedback" *ngIf="registerForm.get('confirmPassword')?.errors?.['required'] && (registerForm.get('confirmPassword')?.touched || registerForm.get('confirmPassword')?.dirty)">
+          Confirm password is required
+        </div>
+      
+        <!-- Password mismatch error -->
+        <div class="invalid-feedback" *ngIf="registerForm.errors?.['passwordMismatch'] && (registerForm.get('confirmPassword')?.touched || registerForm.get('confirmPassword')?.dirty)">
+          Passwords do not match
+        </div>
+      </div>
+      
+    
+      <!-- Role -->
+     <div class="mb-3">
+  <label class="form-label">Role <span class="text-danger">*</span></label>
+  <select
+    formControlName="role"
+    class="form-select"
+    [class.is-invalid]="registerForm.get('role')?.invalid && (registerForm.get('role')?.touched || registerForm.get('role')?.dirty)">
+    
+    <option value="" disabled>Select Role</option>
+    <option value="Admin">Admin</option>
+    <option value="User">User</option>
+  </select>
+
+  <div class="invalid-feedback" *ngIf="registerForm.get('role')?.errors?.['required']">
+    Role is required
+  </div>
+</div>
+
+      
+    
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary btn-block mb-3" [disabled]="!registerForm.valid">
+          <i class="fas fa-user-plus me-2"></i> Register
+        </button>
+        <a href="#" class="text-decoration-none small" (click)="toggleRegister()">Back to Login</a>
+      </div>
+    </form>
+    
+
+    <!-- ✅ FORGOT PASSWORD FORM -->
+    <form *ngIf="showForgot" [formGroup]="forgotForm" (ngSubmit)="onForgotSubmit()" novalidate>
+
+      <!-- Username -->
+      <div class="mb-3">
+        <label class="form-label">Username<span class="text-danger">*</span></label>
+        <input type="text" formControlName="username" class="form-control"
+          [class.is-invalid]="forgotForm.get('username')?.invalid && (forgotForm.get('username')?.touched || forgotForm.get('username')?.dirty)"
+          placeholder="Enter your username">
+        <div class="invalid-feedback" *ngIf="forgotForm.get('username')?.errors?.['required']">
+          Username is required
+        </div>
+      </div>
+    
+      <!-- New Password -->
+      <div class="mb-3 position-relative">
+        <label class="form-label">New Password<span class="text-danger">*</span></label>
+        <input [type]="showPassword ? 'text' : 'password'" formControlName="newPassword" class="form-control"
+          [class.is-invalid]="forgotForm.get('newPassword')?.invalid && (forgotForm.get('newPassword')?.touched || forgotForm.get('newPassword')?.dirty)"
+          placeholder="Enter new password">
+        <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'" 
+           (click)="togglePassword()" 
+           style="position:absolute; right:12px; top:38px; cursor:pointer;"></i>
+        <div class="invalid-feedback" *ngIf="forgotForm.get('newPassword')?.errors?.['required']">
+          New password is required
+        </div>
+        <div class="invalid-feedback" *ngIf="forgotForm.get('newPassword')?.errors?.['minlength']">
+          Minimum 8 characters
+        </div>
+      </div>
+    
+      <!-- Confirm New Password -->
+      <div class="mb-3 position-relative">
+        <label class="form-label">Confirm New Password<span class="text-danger">*</span></label>
+        <input [type]="showPassword ? 'text' : 'password'" formControlName="confirmPassword" class="form-control"
+          [class.is-invalid]="
+            (forgotForm.get('confirmPassword')?.invalid && (forgotForm.get('confirmPassword')?.touched || forgotForm.get('confirmPassword')?.dirty))
+            || (forgotForm.errors?.['passwordMismatch'] && (forgotForm.get('confirmPassword')?.touched || forgotForm.get('confirmPassword')?.dirty))
+          "
+          placeholder="Re-enter new password">
+      
+        <!-- Required error -->
+        <div class="invalid-feedback" 
+             *ngIf="forgotForm.get('confirmPassword')?.errors?.['required'] && (forgotForm.get('confirmPassword')?.touched || forgotForm.get('confirmPassword')?.dirty)">
+          Please confirm your password
+        </div>
+      
+        <!-- Password mismatch error -->
+        <div class="invalid-feedback" 
+             *ngIf="forgotForm.errors?.['passwordMismatch'] && (forgotForm.get('confirmPassword')?.touched || forgotForm.get('confirmPassword')?.dirty)">
+          Passwords do not match
+        </div>
+      </div>
+      
+    
+      <!-- Submit -->
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary btn-block mb-3" [disabled]="!forgotForm.valid">
+          <i class="fas fa-key me-2"></i> Reset Password
+        </button>
+        <a href="#" class="text-decoration-none small" (click)="toggleForgot()">Back to Login</a>
+      </div>
+    </form>
+    
+  </div>
+</div>

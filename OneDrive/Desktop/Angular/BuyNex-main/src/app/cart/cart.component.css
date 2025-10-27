@@ -1,0 +1,64 @@
+/* Card layout */
+.card {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-left: 120px;
+  margin-top: 100px;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+/* Card header/body/footer alignment */
+.card-body h5 {
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.card-body p {
+  margin-bottom: 0.5rem;
+}
+
+/* Card footer buttons */
+.card-footer {
+  display: flex;
+  justify-content: space-around;
+  gap: 0.5rem;
+}
+
+.card-footer .btn {
+  flex: 1;
+  border-radius: 5px;
+  padding: 6px 0;
+  font-size: 0.9rem;
+  transition: 0.2s;
+}
+
+.card-footer .btn:hover {
+  opacity: 0.9;
+}
+
+/* Empty cart message */
+.text-center.mt-3 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #555;
+}
+
+/* Responsive layout */
+@media (max-width: 992px) {
+  .col-md-4 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+@media (max-width: 576px) {
+  .col-md-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}

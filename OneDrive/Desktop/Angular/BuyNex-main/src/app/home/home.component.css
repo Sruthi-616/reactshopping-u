@@ -1,0 +1,110 @@
+
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden; 
+}
+  .content-area {
+    margin-left: 0; 
+  }
+
+.h5{
+  margin-left: 500px;
+}
+
+/* ====== Content Area ====== */
+.row {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ====== Card Styling ====== */
+.card {
+  border: none;
+  border-radius: 15px;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+  width:300px;
+  margin-left: 50px;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* ====== Card Content ====== */
+.card h5 {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #343a40;
+  margin-bottom: 0.5rem;
+  background-color: whitesmoke;
+}
+
+.card p {
+  font-size: 1rem;
+  color: #6c757d;
+  margin: 0;
+}
+
+/* ====== Responsive Behavior ====== */
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    width: 90%;
+    margin-bottom: 10px;
+  }
+}
+.col-md canvas {
+  width: 100% !important;
+  max-width: 400px;
+  height: auto !important;
+  margin: 20px auto;
+  display: block;
+  margin-top: -250px;
+  
+}
+
+
+.card {
+  animation: fadeIn 0.5s ease forwards;
+}
+.h{
+  margin-left: 600px;
+}
+canvas {
+  width: 80% !important;
+  height: 250px !important;
+  margin-top: 50px;
+  margin-left: 40px;
+}
+
+.badge {
+  font-size: 1rem;
+  padding: 0.6em 1em;
+}
+.t{
+margin-top:100px;
+height: 400px;
+width:600px;
+}
+h3{
+  margin-left: -25px;
+}
+.w{
+  height:350px;
+  width:500px;
+}
+.q{
+  height:350px;
+  width:500px;
+}
+

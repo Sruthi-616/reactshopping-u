@@ -1,0 +1,110 @@
+/* Card styling */
+.card {
+  border-radius: 10px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+}
+
+/* Card body */
+.card-body h5.card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.card-body p.card-text {
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+/* General badge styling */
+.badge {
+  display: inline-block;
+  padding: 0.35em 0.7em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+/* Active badge (green) */
+.badge.bg-success {
+  background-color: #28a745;
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Inactive badge (red) */
+.badge.bg-danger {
+  background-color: #dc3545;
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Hover effect for badge */
+.badge:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+/* Small spacing for multiple badges */
+.badge + .badge {
+  margin-left: 0.25rem;
+}
+
+/* Status badges
+
+
+/* Buttons styling */
+.btn-sm {
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  transition: all 0.2s ease;
+}
+
+.btn-sm i {
+  margin-right: 4px;
+}
+
+/* Add hover effects */
+.btn-primary:hover {
+  background-color: #0b5ed7;
+}
+
+.btn-success:hover {
+  background-color: #198754;
+}
+
+/* Margin between buttons */
+.card-body button {
+  margin-bottom: 0.3rem;
+}
+
+/* Make buttons full width on small screens */
+@media (max-width: 576px) {
+  .card-body button {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Row spacing */
+.row {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Ensure card height is uniform */
+.card.h-100 {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

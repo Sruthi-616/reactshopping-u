@@ -1,0 +1,83 @@
+<div class="container mt-5">
+    <div class="card mx-auto" style="max-width: 400px;">
+      <div class="card-body">
+        <h5 class="card-title text-center mb-4">Change Password</h5>
+  
+        <form [formGroup]="changeForm" (ngSubmit)="onSubmit()">
+  
+          <!-- Username (readonly) -->
+          <div class="mb-3">
+            <label>Username<span class="text-danger">*</span></label>
+            <input 
+              type="text" 
+              class="form-control" 
+              formControlName="username"
+              readonly>
+          </div>
+  
+          <!-- Old Password -->
+          <div class="mb-3 position-relative">
+            <label>Old Password<span class="text-danger">*</span></label>
+            <input 
+              [type]="showOld ? 'text' : 'password'" 
+              class="form-control" 
+              formControlName="oldPassword">
+            <i class="fa" 
+               [ngClass]="showOld ? 'fa-eye-slash' : 'fa-eye'" 
+               (click)="togglePassword('old')" 
+               style="position:absolute; top:38px; right:10px; cursor:pointer;"></i>
+            <div *ngIf="changeForm.get('oldPassword')?.touched && changeForm.get('oldPassword')?.errors" class="text-danger small">
+              Old password is required
+            </div>
+          </div>
+  
+          <!-- New Password -->
+          <div class="mb-3 position-relative">
+            <label>New Password<span class="text-danger">*</span></label>
+            <input 
+              [type]="showNew ? 'text' : 'password'" 
+              class="form-control" 
+              formControlName="newPassword">
+            <i class="fa" 
+               [ngClass]="showNew ? 'fa-eye-slash' : 'fa-eye'" 
+               (click)="togglePassword('new')" 
+               style="position:absolute; top:38px; right:10px; cursor:pointer;"></i>
+            <div *ngIf="changeForm.get('newPassword')?.touched && changeForm.get('newPassword')?.errors" class="text-danger small">
+              <div *ngIf="changeForm.get('newPassword')?.errors?.['required']">New password is required</div>
+              <div *ngIf="changeForm.get('newPassword')?.errors?.['minlength']">Minimum 8 characters required</div>
+            </div>
+          </div>
+  
+          <!-- Confirm Password -->
+          <div class="mb-3 position-relative">
+            <label>Confirm New Password<span class="text-danger">*</span></label>
+            <input 
+              [type]="showConfirm ? 'text' : 'password'" 
+              class="form-control" 
+              formControlName="confirmPassword">
+            <i class="fa" 
+               [ngClass]="showConfirm ? 'fa-eye-slash' : 'fa-eye'" 
+               (click)="togglePassword('confirm')" 
+               style="position:absolute; top:38px; right:10px; cursor:pointer;"></i>
+            <div *ngIf="changeForm.get('confirmPassword')?.touched && changeForm.hasError('passwordMismatch')" class="text-danger small">
+              Passwords do not match
+            </div>
+          </div>
+  
+          <button class="btn btn-primary ms-4" type="submit" 
+        [disabled]="
+          !changeForm.get('oldPassword')?.value || 
+          !changeForm.get('newPassword')?.value || 
+          !changeForm.get('confirmPassword')?.value
+        ">
+        Change Password
+          </button>
+          <button class="btn btn-secondary ms-5 mt-1" type="submit" (click)="log()">Cancel</button>
+        </form>
+  
+        <!-- Link to login -->
+  
+      </div>
+    </div>
+  </div>
+  

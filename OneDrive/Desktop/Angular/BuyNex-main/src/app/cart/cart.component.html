@@ -1,0 +1,85 @@
+
+<div *ngIf="cart.length === 0" class="text-center mt-3">
+  Cart is empty
+</div>
+
+<div class="row">
+  <div class="col-md-4 mb-3" *ngFor="let product of cart">
+    <div class="card">
+      <div class="card-body text-center">
+        <h5>{{ product.productName }}</h5>
+        <p>Code: {{ product.productCode }}</p>
+        <p>Price: ₹{{ product.productPrice }}</p>
+      </div>
+      <div class="card-footer text-center">
+        <button class="btn btn-danger" (click)="removeFromCart(product.productCode)">
+          Remove
+        </button>
+        <button class="btn btn-success btn-sm"
+        data-bs-toggle="modal"
+        data-bs-target="#buyNowModal"
+        (click)="openBuyNow(product)"
+        [disabled]="product.productStatus === 'Inactive'">
+       <i class="fa-solid fa-bag-shopping"></i> Buy Now
+        </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Buy Now Modal -->
+<div class="modal fade" id="buyNowModal" tabindex="-1" aria-hidden="true"> 
+  <div class="modal-dialog"> <div class="modal-content"> 
+    <div class="modal-header bg-dark text-white"> 
+      <h5 class="modal-title">Buy Now - {{ selectedProduct?.productName }}</h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button> 
+    </div>
+       <div class="modal-body">
+        <form [formGroup]="buyNowForm" (ngSubmit)="onOrder()">
+          <!-- Username -->
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input type="text" formControlName="userName" class="form-control" readonly>
+          </div>
+
+          <!-- Product Name -->
+          <div class="mb-3">
+            <label class="form-label">Product Name</label>
+            <input type="text" formControlName="productName" class="form-control" readonly>
+          </div>
+        
+          <!-- Product Price -->
+          <div class="mb-3">
+            <label class="form-label">Product Price</label>
+            <input type="text" formControlName="productPrice" class="form-control" readonly>
+          </div>
+        
+          <div class="mb-3">
+            <label class="form-label">Phone Number<span class="text-danger">*</span></label>
+            <input type="text" formControlName="phoneNumber" maxlength="10" class="form-control" placeholder="Enter your phone number">
+            <div class="text-danger" *ngIf="buyNowForm.get('phoneNumber')?.touched && buyNowForm.get('phoneNumber')?.invalid">
+              <small *ngIf="buyNowForm.get('phoneNumber')?.errors?.['required']">Phone number is required.</small>
+              <small *ngIf="buyNowForm.get('phoneNumber')?.errors?.['pattern']">Enter a valid 10-digit number.</small>
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="mb-3">
+            <label class="form-label">Address<span class="text-danger">*</span></label>
+            <textarea formControlName="address" class="form-control" rows="2" placeholder="Enter your address"></textarea>
+            <div class="text-danger" *ngIf="buyNowForm.get('address')?.touched && buyNowForm.get('address')?.invalid">
+              <small *ngIf="buyNowForm.get('address')?.errors?.['required']">Address is required.</small>
+              <small *ngIf="buyNowForm.get('address')?.errors?.['minlength']">Address must be at least 5 characters.</small>
+            </div>
+          </div>
+          <!-- Place Order button -->
+          <div class="text-end">
+            <button type="submit" class="btn btn-success"  [disabled]= "buyNowForm.invalid" >Place Order</button>
+          </div>
+        </form>
+        
+    </div> 
+  </div>
+ </div> 
+</div> 

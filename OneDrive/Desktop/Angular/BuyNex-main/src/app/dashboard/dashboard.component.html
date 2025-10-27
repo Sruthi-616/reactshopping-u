@@ -1,0 +1,202 @@
+<div class="container-fluid vh-100 p-0 overflow-hidden">
+  <!-- Top Navbar -->
+  <nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm top-navbar px-3">
+    <div class="container-fluid d-flex align-items-center">
+      <button class="btn text-dark me-3" (click)="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <span class="navbar-brand fw-bold"></span>
+       <h3>BuyNex</h3>
+      <ul class="navbar-nav ms-auto align-items-center">
+        <h5 class="mt-2 me-4">{{ username }}</h5>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            id="userMenu"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="fa-solid fa-user fa-lg"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+            <li class="ms-5"  *ngIf="role === 'Admin'">Admin</li>
+            <li class="ms-5"  *ngIf="role === 'User'">Customer</li><hr>
+            <li>
+              <button class="dropdown-item text-start" (click)="change()">Change Password</button>
+            </li>
+            <li>
+              <button class="dropdown-item text-start" (click)="logout()">Logout</button>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="row h-100">
+    <!-- Sidebar -->
+    <div class="col-md-2 bg-dark sidebar p-0" [ngClass]="{ closed: !isSidebarOpen }">
+      <nav class="navbar navbar-dark flex-column align-items-start h-100 mt-4">
+        <ul class="navbar-nav flex-column w-100">
+          <li class="nav-item" *ngIf="role === 'Admin'">
+            <a routerLink="/dash/home" routerLinkActive="active" class="nav-link px-3 py-2">
+              <i class="fa-duotone fa-regular fa-address-card"></i> Dashboard
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="role === 'Admin'">
+            <a routerLink="/dash/product" routerLinkActive="active" class="nav-link px-3 py-2">
+              <i class="fa-brands fa-product-hunt me-2"></i>Products
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="role === 'Admin'">
+            <a routerLink="/dash/allorders" routerLinkActive="active" class="nav-link px-3 py-2">
+              <i class="fa-solid fa-cart-shopping"></i> Orders
+            </a>
+          </li>
+            
+          <li class="nav-item" *ngIf="role === 'User'">
+            <a routerLink="/dash/userdashboard" routerLinkActive="active" class="nav-link px-3 py-2">
+              <i class="fa-duotone fa-regular fa-address-card"></i> Dahboard
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="role === 'User'">
+            <a routerLink="/dash/items" routerLinkActive="active" class="nav-link px-3 py-2">
+              <i class="fa-brands fa-product-hunt me-2"></i>Products
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="role === 'User'">
+            <a routerLink="/dash/cart" routerLinkActive="active" class="nav-link px-3 py-2">
+              <i class="fa-solid fa-cart-shopping"></i> Cart
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="role === 'User'">
+            <a routerLink="/dash/myorders" routerLinkActive="active" class="nav-link px-3 py-2">
+              <i class="fa-solid fa-cart-shopping"></i> MyOrders
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-10 mt-3">
+      <!-- ✅ Show Dashboard cards & charts ONLY when on /dash -->
+      <div *ngIf="isDashboardPage">
+        <div class="container mt-4">
+          <div class="row">
+            <!-- Total Products -->
+            <div class="col-md-3 mb-3" *ngIf="role === 'Admin'">
+              <div class="card text-white">
+                <div class="card-header bg-primary">Total Products</div>
+                <div class="card-body">
+                  <h5 class="card-title">{{ totalProducts }}</h5>
+                  <p class="card-text">All products in inventory.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Active Products -->
+            <div class="col-md-3 mb-3" *ngIf="role === 'Admin'">
+              <div class="card text-white">
+                <div class="card-header bg-success">Active Products</div>
+                <div class="card-body">
+                  <h5 class="card-title">{{ activeProducts }}</h5>
+                  <p class="card-text">Products currently active.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Inactive Products -->
+            <div class="col-md-3 mb-3" *ngIf="role === 'Admin'">
+              <div class="card text-white">
+                <div class="card-header bg-danger">Inactive Products</div>
+                <div class="card-body">
+                  <h5 class="card-title">{{ inactiveProducts }}</h5>
+                  <p class="card-text">Products not active.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Total Orders -->
+            <div class="col-md-3 mb-3" *ngIf="role === 'Admin'">
+              <div class="card text-white">
+                <div class="card-header bg-info">Total Orders</div>
+                <div class="card-body">
+                  <h5 class="card-title">{{ this.t }}</h5>
+                  <p class="card-text">All placed orders.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts -->
+          <div class="row mt-4">
+            <div class="col-md-6 d-flex justify-content-center align-items-center" *ngIf="role === 'Admin'">
+              <div class="card w ">
+                <div class="card-body">
+                  <canvas id="activeInactiveChart"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 d-flex justify-content-center align-items-center" *ngIf="role === 'Admin'">
+              <div class="card q ">
+                <div class="card-body">
+                  <canvas class="r" id="orderPieChart"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2 mt-5 ms-5" *ngIf="role === 'User'">
+              <div class="card text-white I">
+                <div class="card-header bg-primary">Total Orders</div>
+                <div   class="card-body">
+                  <h5 class="card-title">{{ totalOrders }}</h5>
+                  <p class="card-text">My Order placed.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 mt-5 s" *ngIf="role === 'User'">
+              <div class="card">
+                <div class="card-header  text-white bg-success">Total Cart Items</div>
+                <div class="card-body">
+                  <h5 class="card-title">{{ totalCartItems }}</h5>
+                  <p class="card-text">Items in my cart.</p>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 d-flex justify-content-center m" *ngIf="role === 'User'">
+                <div class="card" style="width: 100%; max-width: 400px;">
+                  <div class="card-header text-center">
+                    <h6>My Orders Overview</h6>
+                  </div>
+                  <div class="card-body">
+                    <canvas id="orderChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            
+            <div class="col-md-6 d-flex justify-content-center n" *ngIf="role === 'User'">
+              <div class="card"  style="width: 100%; max-width: 400px;">
+                <div class="card-header text-center">
+                  <h6>Items in my Cart</h6>
+                  </div>
+                  <div class="card-body">
+                  <canvas id="cartChart" width="400" height="400"></canvas>
+                  </div>
+                  </div>
+                </div>
+                </div>
+        </div>
+      </div>
+      <!-- Other routed components -->
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
