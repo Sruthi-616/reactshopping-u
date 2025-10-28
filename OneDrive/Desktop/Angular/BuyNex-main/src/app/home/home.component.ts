@@ -115,7 +115,7 @@ export class HomeComponent  implements OnInit{
         data: {
           labels: this.orderLabels.length ? this.orderLabels : ['No Orders'],
           datasets: [{
-            data: this.orderData.length ? this.orderData : [1],
+            data: this.orderData.length ? this.orderData : [0],
             backgroundColor: [
               '#dc3545','#28a745', 
             ],

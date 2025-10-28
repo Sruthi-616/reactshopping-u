@@ -5,60 +5,65 @@ import { BehaviorSubject, of } from 'rxjs';
   providedIn: 'root'
 })
 export class Service1Service {
-
-  constructor() { }
-  //cart:any[]=[]
-//addtocart(product:any){
-    //this.cart.push(pobj);
-//return "Add to Cart"
-//const exists = this.cart.find(p => p.code === product.code);
-    //if (!exists) {
-      //this.cart.push(product);
-   // }
-    //return "Product added to cart";
-  //}
-  //getCartItems(){
-    //return of(this.cart)
-  //}
+  private userCarts: { [username: string]: any[] } = {};
   private cartSubject = new BehaviorSubject<any[]>([]);
-  cart$ = this.cartSubject.asObservable(); // Observable for components
+  cart$ = this.cartSubject.asObservable();
+
+  constructor() {
+    this.loadUserCartFromStorage();
+  }
+
+  private loadUserCartFromStorage() {
+    const username = localStorage.getItem('username');
+    if (username) {
+      const stored = localStorage.getItem(`cart_${username}`);
+      if (stored) {
+        this.userCarts[username] = JSON.parse(stored);
+        this.cartSubject.next([...this.userCarts[username]]);
+      }
+    }
+  }
 
   addToCart(product: any) {
-    const currentCart = this.cartSubject.getValue();
     const username = localStorage.getItem('username');
-    const productWithUser = { ...product, userName: username };
-    const exists = currentCart.find(p => p.productCode === product.productCode && p.userName === username);
+    if (!username) return;
+
+    if (!this.userCarts[username]) {
+      this.userCarts[username] = [];
+    }
+
+    const exists = this.userCarts[username].find(p => p.productCode === product.productCode);
     if (!exists) {
-      this.cartSubject.next([...currentCart, productWithUser]);
+      this.userCarts[username].push(product);
+      this.saveUserCart(username);
+      this.cartSubject.next([...this.userCarts[username]]);
     }
   }
 
   removeFromCart(productCode: string) {
-    const currentCart = this.cartSubject.getValue();
     const username = localStorage.getItem('username');
-    this.cartSubject.next(currentCart.filter(p => !(p.productCode === productCode && p.userName === username)));
+    if (!username) return;
+
+    if (this.userCarts[username]) {
+      this.userCarts[username] = this.userCarts[username].filter(p => p.productCode !== productCode);
+      this.saveUserCart(username);
+      this.cartSubject.next([...this.userCarts[username]]);
+    }
   }
 
   getCart(): any[] {
     const username = localStorage.getItem('username');
-    return this.cartSubject.getValue().filter(item => item.userName === username);
+    if (!username) return [];
+    return this.userCarts[username] || [];
   }
 
   getCartLength(): number {
     const username = localStorage.getItem('username');
-    return this.cartSubject.getValue().filter(item => item.userName === username).length;
+    if (!username) return 0;
+    return (this.userCarts[username] || []).length;
   }
-  userCart:any;
-  //getSomeOrders(): any[] {
-    
-    //const username = localStorage.getItem('username'); // ✅ get from localStorage
-    //console.log(username)
-   // const userOrders = this.cart$.filter(cart => cart.userName === username);
-    //return userOrders;
-  //}
-  //get():number{
-    //return this.getSomeOrders().length;
-  //}
+
+  private saveUserCart(username: string) {
+    localStorage.setItem(`cart_${username}`, JSON.stringify(this.userCarts[username] || []));
+  }
 }
-
-

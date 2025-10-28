@@ -59,6 +59,14 @@
                [ngClass]="showConfirm ? 'fa-eye-slash' : 'fa-eye'" 
                (click)="togglePassword('confirm')" 
                style="position:absolute; top:38px; right:10px; cursor:pointer;"></i>
+               <div 
+               *ngIf="
+                 changeForm.get('confirmPassword')?.hasError('required') &&
+                 changeForm.get('confirmPassword')?.touched
+               " 
+               class="text-danger small">
+               Confirm password is required
+             </div>
             <div *ngIf="changeForm.get('confirmPassword')?.touched && changeForm.hasError('passwordMismatch')" class="text-danger small">
               Passwords do not match
             </div>

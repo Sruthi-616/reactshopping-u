@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -17,7 +18,7 @@ export class ForgotComponent {
   showNew: boolean = false;
   showConfirm: boolean = false;
 
-  constructor(private fb: FormBuilder,private r:Router) {}
+  constructor(private fb: FormBuilder,private r:Router,private location:Location) {}
 
   ngOnInit() {
       this.users = JSON.parse(localStorage.getItem('users') || '[]');
@@ -94,6 +95,6 @@ export class ForgotComponent {
   });
   }
   log(){
-    this.r.navigateByUrl('/dash')
+      this.location.back();
   }
 }

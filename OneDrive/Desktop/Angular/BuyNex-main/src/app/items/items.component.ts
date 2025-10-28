@@ -46,23 +46,51 @@ export class ItemsComponent implements OnInit {
     this.listService.getProducts().subscribe((data: any) => {
       this.products = data;
     });
-
+    
     this.cartService.cart$.subscribe(cart => (this.cart = cart));
   }
 
-  addToCart(product: any) {
-    // Use the cart service to add product
-    this.cartService.addToCart(product);
+
+    addToCart(product: any) {
+      const username = localStorage.getItem('username');
     
-    Swal.fire({
-      toast: true,
-      position: 'top-end',
-      icon: 'success',
-      title: `${product.productName} added to cart`,
-      showConfirmButton: false,
-      timer: 2000
-    });
-  }
+      if (!username) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Login Required',
+          text: 'Please log in before adding items to your cart.',
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        return;
+      }
+    
+      // ✅ Use the service method instead of pushing locally
+      const currentCart = this.cartService.getCart();
+      const exists = currentCart.some(p => p.productCode === product.productCode);
+    
+      if (exists) {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'info',
+          title: `${product.productName} is already in your cart`,
+          showConfirmButton: false,
+          timer: 2000
+        });
+      } else {
+        this.cartService.addToCart(product); // ✅ Call service method
+    
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          title: `${product.productName} added to your cart`,
+          showConfirmButton: false,
+          timer: 2000
+        });
+      }
+    }
   openBuyNow(product: any) {
     this.selectedProduct = { ...product };
     this.buyNowForm.patchValue({

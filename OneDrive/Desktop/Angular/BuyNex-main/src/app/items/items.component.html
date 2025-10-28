@@ -10,7 +10,7 @@
             <span *ngIf="product.productStatus === 'Inactive'" class="badge bg-danger">
                Not Available 
             </span>
-            <span  *ngIf="product.productStatus === 'Active'" class="mt-4">Available</span>            
+            <span  *ngIf="product.productStatus === 'Active'" class=" badge bg-success">Available</span>            
           </p>
           <button class="btn btn-primary btn-sm me-2"
                   (click)="addToCart(product)"

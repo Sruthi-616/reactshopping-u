@@ -20,13 +20,12 @@ export class CartComponent implements OnInit {
 
   constructor(private cartService: Service1Service, private s: ListService, private fb: FormBuilder, private orderService: Service2Service) {}
 
- carts:any;
   ngOnInit() {
     this.buyNowForm = this.fb.group({
       userName: [''],
       productName: [''],
       productPrice: [''],
-      phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')],Validators.maxLength(10)],
+      phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')], Validators.maxLength(10)],
       address: ['', Validators.required]
     });
     
@@ -41,10 +40,8 @@ export class CartComponent implements OnInit {
       this.products = data;
     });
 
-    // Load only current user's cart items
+    // Load user's cart and subscribe to changes
     this.loadUserCart();
-    
-    // Subscribe to cart changes and filter for current user
     this.cartService.cart$.subscribe(() => {
       this.loadUserCart();
     });
@@ -52,13 +49,13 @@ export class CartComponent implements OnInit {
 
   loadUserCart() {
     this.cart = this.cartService.getCart();
-    console.log('Cart loaded:', this.cart);
+    console.log('User cart loaded:', this.cart);
   }
 
   removeFromCart(productCode: string) {
     this.cartService.removeFromCart(productCode);
-    console.log(productCode)
   }
+
   openBuyNow(product: any) {
     this.selectedProduct = { ...product };
     this.buyNowForm.patchValue({
@@ -70,60 +67,44 @@ export class CartComponent implements OnInit {
     const modal = new bootstrap.Modal(modalEl);
     modal.show();
   }
+
   onOrder() {
     if (this.buyNowForm.invalid) {
       this.buyNowForm.markAllAsTouched();
       return;
     }
-  
+
     const orderData = {
       ...this.buyNowForm.value,
-      orderDate: new Date(),
-      
+      orderDate: new Date()
     };
-    
 
-// Call service
-this.orderService.placeOrder(orderData).subscribe({
-  next: (res) => {
-    // Add to service array
-    this.orderService.addOrder(orderData);
-    const Toast = Swal.mixin({ 
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
+    this.orderService.placeOrder(orderData).subscribe({
+      next: (res) => {
+        this.orderService.addOrder(orderData);
+        Swal.fire({
+          toast: true,
+          position: "top-end",
+          icon: "success",
+          title: "Order Placed successfully",
+          showConfirmButton: false,
+          timer: 3000
+        });
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error placing order',
+          text: err.message
+        });
       }
     });
-    Toast.fire({
-      icon: "success",
-      title: "Order Placed successfully"
-    });
-    
-  },
-  error: (err) => {
-    Swal.close();
-    Swal.fire({
-      icon: 'error',
-      title: 'Error placing order',
-      text: err.message
-    });
-  }
-});
 
+    const modalEl = document.getElementById('buyNowModal');
+    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+    modalInstance?.hide();
 
-  
-        // Close modal
- const modalEl = document.getElementById('buyNowModal');
- const modalInstance = bootstrap.Modal.getInstance(modalEl);
- modalInstance?.hide();
-  
-        // Reset form
- this.buyNowForm.reset();
- this.buyNowForm.patchValue({ userName: this.username });
+    this.buyNowForm.reset();
+    this.buyNowForm.patchValue({ userName: this.username });
   }
-  }
+}

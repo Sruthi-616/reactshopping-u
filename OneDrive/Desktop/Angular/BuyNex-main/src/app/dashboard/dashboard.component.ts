@@ -108,12 +108,21 @@ export class DashboardComponent {
 
     
       });
-      // For admin dashboard - show ALL orders and cart items
-      this.t = this.o.getAll(); // Total count of all orders
-      this.totalOrders = this.o.getAll(); // All orders count
-      this.totalCartItems = this.getAllCartItems(); // All cart items
-      this.loadAllOrders(); // Load all orders for chart
-      this.loadAllCart(); // Load all cart items for chart
+      if (this.role === 'Admin') {
+        // Admin view - show all orders
+        this.t = this.o.getAll();
+        this.totalOrders = this.o.getAll();
+        this.totalCartItems = this.getAllCartItems();
+        this.load(); // Load all orders for admin chart
+      } else {
+        // User view - show only user's orders
+        this.t = this.o.get();
+        this.totalOrders = this.o.get();
+        this.totalCartItems = this.res.getCartLength();
+        this.loadOrders(); // Load user's orders for user chart
+      }
+      this.loadCart();
+      this.createCartDistributionChart();
   }
 
   ngAfterViewInit() {
@@ -124,11 +133,11 @@ export class DashboardComponent {
         this.createCartDistributionChart();
       }, 500);
   }
-  loadAllOrders() {
-    const orders = this.o.getOrders(); // Get ALL orders from all users
+  loadOrders() {
+    const orders = this.o.getSomeOrders();
     this.totalOrders = orders.length;
 
-    // Count orders by product name
+    // ✅ Count orders by product name
     const productCounts: { [key: string]: number } = {};
     orders.forEach(order => {
       const name = order.productName || 'Unknown';
@@ -138,21 +147,38 @@ export class DashboardComponent {
     this.orderLabels = Object.keys(productCounts);
     this.orderData = Object.values(productCounts);
   }
- 
-  loadAllCart() {
-    // Get all cart items from all users (not filtered by current user)
-    const allCartItems = this.getAllCartItems();
-    this.totalCartItems = allCartItems;
+  load() {
+    const orders = this.o.getOrders();
+    this.totalOrders = orders.length;
 
-    // For now, show a simple representation since we need all users' cart data
-    this.cartLabels = ['Total Cart Items'];
-    this.cartData = [allCartItems];
+    // ✅ Count orders by product name
+    const productCounts: { [key: string]: number } = {};
+    orders.forEach(order => {
+      const name = order.productName || 'Unknown';
+      productCounts[name] = (productCounts[name] || 0) + 1;
+    });
+
+    this.orderLabels = Object.keys(productCounts);
+    this.orderData = Object.values(productCounts);
+  } 
+  loadCart() {
+    const cart = this.res.getCart();
+    this.totalCartItems = cart.length;
+
+    const cartCounts: { [key: string]: number } = {};
+    cart.forEach(item => {
+      const name = item.productName || 'Unknown';
+      cartCounts[name] = (cartCounts[name] || 0) + 1;
+    });
+
+    this.cartLabels = Object.keys(cartCounts);
+    this.cartData = Object.values(cartCounts);
   }
 
   getAllCartItems(): number {
-    // This should return total cart items from all users
-    // Since cart service filters by user, we need a different approach for admin
-    return this.res.getCartLength(); // For now, this will be 0 for admin
+    // For admin - this would need to aggregate all users' carts
+    // For now, return 0 as admin doesn't have personal cart
+    return 0;
   }
   createAdminOrderChart() {
     const canvas = document.getElementById('orderPieChart') as HTMLCanvasElement;
@@ -167,8 +193,12 @@ export class DashboardComponent {
       return;
     }
   
-    // Load latest order data (if not already loaded)
-    this.loadAllOrders();
+    // Load order data based on role
+    if (this.role === 'Admin') {
+      this.load(); // All orders for admin
+    } else {
+      this.loadOrders(); // User orders for user
+    }
   
     // Wait a bit for async data (since getOrders() might fetch from service)
     setTimeout(() => {
@@ -179,7 +209,7 @@ export class DashboardComponent {
         data: {
           labels: this.orderLabels.length ? this.orderLabels : ['No Orders'],
           datasets: [{
-            data: this.orderData.length ? this.orderData : [1],
+            data: this.orderData.length ? this.orderData : [0],
             backgroundColor: [
               '#dc3545','#28a745', 
             ],

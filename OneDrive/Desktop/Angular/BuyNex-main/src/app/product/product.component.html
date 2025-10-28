@@ -95,7 +95,7 @@
         <div class="modal-body">
           <div class="mb-3">
             <label>Product Code <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" formControlName="productCode" [readonly]="isEdit">
+            <input type="text" class="form-control" formControlName="productCode" [readonly]="isEdit" placeholder="Enter Product Code">
             <div class="text-danger" *ngIf="productForm.get('productCode')?.invalid && productForm.get('productCode')?.touched">
               Product code is required
             </div>
@@ -103,7 +103,7 @@
 
           <div class="mb-3">
             <label>Product Name <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" formControlName="productName">
+            <input type="text" class="form-control" formControlName="productName" placeholder="Enter Product Name">
             <div class="text-danger" *ngIf="productForm.get('productName')?.invalid && productForm.get('productName')?.touched">
               Product name is required
             </div>
@@ -111,7 +111,7 @@
 
           <div class="mb-3">
             <label>Product Price <span class="text-danger">*</span></label>
-            <input type="number" class="form-control" formControlName="productPrice" min="0">
+            <input type="number" class="form-control" formControlName="productPrice" min="0" placeholder="Enter Product Price">
             <div class="text-danger" *ngIf="productForm.get('productPrice')?.invalid && productForm.get('productPrice')?.touched">
               Price must be greater than 0
             </div>

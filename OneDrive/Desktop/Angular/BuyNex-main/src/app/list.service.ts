@@ -6,9 +6,7 @@ import { BehaviorSubject, of } from 'rxjs';
 })
 export class ListService {
   private storageKey = 'products';
-  constructor() { 
-    this.loadProductsFromStorage();
-  }
+  constructor() { }
   productsArray = [
       {
         productCode: 'P001',
@@ -41,7 +39,7 @@ export class ListService {
         productStatus: 'Inactive'
       }
     ];
-    private productsSubject = new BehaviorSubject<any[]>([]);
+    private productsSubject = new BehaviorSubject<any[]>([...this.productsArray]);
 
     // Observable to subscribe to
     products$ = this.productsSubject.asObservable();
@@ -50,17 +48,9 @@ export class ListService {
     getProducts(){
       return of([...this.productsArray]);
     }
-    private loadProductsFromStorage(): void {
-      const stored = localStorage.getItem(this.storageKey);
-      if (stored) {
-        this.productsArray = JSON.parse(stored);
-      }
-      this.productsSubject.next([...this.productsArray]);
-    }
-
-    private saveProductsToStorage(): void {
-      localStorage.setItem(this.storageKey, JSON.stringify(this.productsArray));
-      this.productsSubject.next([...this.productsArray]);
+    private saveProductsToStorage(products: any[]): void {
+      localStorage.setItem(this.storageKey, JSON.stringify(products));
+      this.productsSubject.next(products);
     }
   
     delete(pid:any){
@@ -76,15 +66,17 @@ export class ListService {
     }
     addProduct(product: any) {
       this.productsArray.push(product);
-      this.saveProductsToStorage();
+      this.productsSubject.next([...this.productsArray]); 
+      //this.saveProductsToStorage(product);
     }
   
     updateProduct(updated: any) {
       const index = this.productsArray.findIndex(p => p.productCode === updated.code);
       if (index !== -1) {
         this.productsArray[index] = { ...updated };
-        this.saveProductsToStorage();
+        this.productsSubject.next([...this.productsArray]); 
       }
+      //this.saveProductsToStorage(product);
     }
     getlen(){
       return of(this.productsArray.length)
